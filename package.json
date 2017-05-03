@@ -1,0 +1,25 @@
+{
+  "name": "eridanus",
+  "version": "0.0.1",
+  "description": "China NMC radar data viewer",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/konrumi/eridanus.git"
+  },
+  "author": "Konrumi",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/konrumi/eridanus/issues"
+  },
+  "homepage": "https://github.com/konrumi/eridanus#readme",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  },
+  "dependencies": {
+    "request": "^2.81.0"
+  }
+}
