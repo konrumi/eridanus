@@ -1,16 +1,57 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
-    <title>Eridanus - NMC Radar Data Viewer</title>
+    <title>Eridanus - NMC Radar Data</title>
     <link rel="stylesheet" href="./dist/styles/main.css">
-  </head>
-  <body>
-  <img id="img" src="" alt="">
-  </body>
+</head>
+<body>
 
-  <script>
+<!-- progressBar -->
+<header class="progbar">
+    <div class="progbar-bar loading" style="left: 0;right: 0;"></div>
+</header>
+<!-- /progressBar -->
+
+<!-- sideBar -->
+<nav class="sidebar shandow hide">
+    <h1><i></i><span>Eridanus</span></h1>
+    <ul>
+        <li><a href="#" class="active">雷达图</a></li>
+        <li class="space"></li>
+        <li><a href="#">关于</a></li>
+    </ul>
+</nav>
+<!-- /sideBar -->
+
+<!-- mainWrap -->
+<section class="mainwrap">
+
+    <!-- img block -->
+    <ul class="mainwrap-imglist" id="imgList"></ul>
+
+    <!-- scroll bar -->
+    <ul class="mainwrap-layerlist" id="layerList"></ul>
+
+    <script type="text/plain" id="imgItem">
+        <li class="mainwrap-imgitem" style="z-index: <%= index %>;" data-index="<%= index %>">
+            <img src="<%= img %>" alt="<%= time %>">
+        </li>
+    </script>
+
+    <script type="text/plain" id="layerItem">
+        <li class="mainwrap-layeritem" data-index="<%= index %>">
+            <span><%= time %></span>
+        </li>
+    </script>
+</section>
+<!-- /mainWrap -->
+
+</body>
+
+<script>
     // You can also require other files to run in this process
-    require('./dist/index.js')
-  </script>
+    require('./dist/index.js');
+    require('./dist/radar.js');
+</script>
 </html>
