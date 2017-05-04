@@ -14,8 +14,8 @@
 <!-- /progressBar -->
 
 <!-- sideBar -->
-<nav class="sidebar shandow hide">
-    <h1><i></i><span>Eridanus</span></h1>
+<nav class="sidebar shandow" id="sidebar">
+    <h1><i>e</i><span>Eridanus</span></h1>
     <ul>
         <li><a href="#" class="active">雷达图</a></li>
         <li class="space"></li>
@@ -26,9 +26,22 @@
 
 <!-- mainWrap -->
 <section class="mainwrap">
+    <!-- mask -->
+    <script type="text/plain" id="mask">
+        <div class="mask" data-role="mask"></div>
+    </script>
+
 
     <!-- img block -->
-    <ul class="mainwrap-imglist" id="imgList"></ul>
+    <div class="mainwrap-imgwrap">
+        <div class="mainwrap-title">
+            <a href="#" class="mainwrap-menu" id="menuBtn">〓</a>
+        </div>
+
+        <ul class="mainwrap-imglist" id="imgList"></ul>
+
+        <div class="mainwrap-imgRefer" id="imgRefer"></div>
+    </div>
 
     <!-- scroll bar -->
     <ul class="mainwrap-layerlist" id="layerList"></ul>
@@ -43,6 +56,10 @@
         <li class="mainwrap-layeritem" data-index="<%= index %>">
             <span><%= time %></span>
         </li>
+    </script>
+
+    <script type="text/plain" id="referImg">
+        <img src="<%= img %>" alt="<%= time %>">
     </script>
 </section>
 <!-- /mainWrap -->

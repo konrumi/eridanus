@@ -56,12 +56,6 @@ h1, h2, h3, h4, h5, h6
   background-color rgba(0, 0, 0, .5)
   z-index 10
 
-  &.show
-    fadein()
-
-  &.hide
-    fadeout()
-
 /* progress bar */
 .progbar
   position absolute
@@ -83,6 +77,7 @@ h1, h2, h3, h4, h5, h6
 .sidebar
   position absolute
   top 0
+  left -250px
   bottom 0
   width 240px
   background-color #2f353a
@@ -101,11 +96,13 @@ h1, h2, h3, h4, h5, h6
 
   i
     display inline-block
-    width 32px
-    height 32px
+    width 30px
+    height 30px
     margin 0 10px
     border 1px solid
     border-radius 50%
+    line-height 24px
+    text-indent -5px;
     text-align center
     vertical-align middle
 
@@ -142,8 +139,6 @@ h1, h2, h3, h4, h5, h6
     &.space
       height 18px
 
-  &.hide
-    left -250px
   &.show
     left 0
 
@@ -160,26 +155,69 @@ h1, h2, h3, h4, h5, h6
   li
     list-style none
 
-  .mainwrap-imglist
+  img
+    position relative
+    left -1px
+    top -1px
+
+  .mainwrap-title
+    height 60px
+    line-height 60px
+
+    .mainwrap-menu
+      display inline-block
+      width 24px
+      height 24px
+      margin 5px
+      border 1px solid
+      border-radius 50%
+      background-color #fff
+      color #aaa
+      font-size 14px
+      font-sans()
+      line-height 24px
+      text-align center
+      text-decoration none
+      vertical-align middle
+
+      &:hover
+        background-color #aaa
+        color #fff
+
+  .mainwrap-imgwrap
+    position relative
     flex 0 1 855px
-    padding 0 5px 5px 0
+    height 100%
+
+  .mainwrap-imglist
+    position absolute
+    left 0
+    bottom 0
+    width 855px
     height 640px
+    border-top 1px solid #ccc
+    overflow hidden;
+    z-index 2
+
+  .mainwrap-imgRefer
+    position absolute
+    left 0
+    bottom 0
+    width 855px
+    height 640px
+    overflow hidden;
+    z-index 1
 
   .mainwrap-imgitem
     position absolute
     left 0
-    top 0
+    bottom 0
     width 855px
     height 640px
     overflow hidden
 
     &.active
-      z-index: 100 !important
-
-    img
-      position relative
-      left -1px
-      top -1px
+      z-index 100 !important
 
   .mainwrap-layerlist
     flex 1 0 auto
@@ -187,6 +225,7 @@ h1, h2, h3, h4, h5, h6
     border-left 1px solid #ccc
     background-color #eee
     overflow auto
+    user-select none
 
     .mainwrap-layeritem
       border-bottom 1px solid #aaa

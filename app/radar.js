@@ -1,14 +1,21 @@
 const $ = require('jquery');
 const ejs = require('ejs');
 
+let $body = $('body');
+
 let pageTpl = {
     imgItem: ejs.compile($('#imgItem').html(), null),
-    layerItem: ejs.compile($('#layerItem').html(), null)
+    layerItem: ejs.compile($('#layerItem').html(), null),
+    referImg: ejs.compile($('#referImg').html(), null),
+    mask: ejs.compile($('#mask').html(), null)
 };
 
 let pageEle = {
     imgList: $('#imgList'),
-    layerList: $('#layerList')
+    layerList: $('#layerList'),
+    imgRefer: $('#imgRefer'),
+    menuBtn: $('#menuBtn'),
+    sidebar: $('#sidebar')
 };
 
 let pageData = {
@@ -81,16 +88,53 @@ function initPage() {
     // event handler init
 
     //- layer interactive
-    pageEle.layerList.on('mouseenter', '.mainwrap-layeritem', function() {
-        let $ele = $(this);
+    pageEle.layerList
+        .on('mouseenter', '.mainwrap-layeritem', function() {
+            let $ele = $(this);
 
-        // active layer
-        pageEle.layerList.find('.active').removeClass('active');
-        $ele.addClass('active');
+            // active layer
+            pageEle.layerList.find('.active').removeClass('active');
+            $ele.addClass('active');
 
-        // active image
-        pageEle.imgList.find('.active').removeClass('active');
-        pageEle.imgList.find('[data-index="' + $ele.attr('data-index') + '"]').addClass('active');
+            // active image
+            pageEle.imgList.find('.active').removeClass('active');
+            pageEle.imgList.find('[data-index="' + $ele.attr('data-index') + '"]').addClass('active');
+        })
+        .on('click', '.mainwrap-layeritem', function() {
+            let $ele = $(this);
+            let hasMarked = $ele.hasClass('marked');
+
+            // mark layer
+            pageEle.layerList.find('.marked').removeClass('marked');
+
+            // set refer image
+            if (!hasMarked) {
+                let targetImgElement = pageEle.imgList.find('[data-index="' + $ele.attr('data-index') + '"]').find('img');
+
+                $ele.addClass('marked');
+
+                pageEle.imgRefer.html(pageTpl.referImg({
+                    img: targetImgElement.attr('src'),
+                    time: targetImgElement.attr('alt')
+                }));
+
+                pageEle.imgList.css({'opacity': '.5'});
+            } else {
+                pageEle.imgRefer.html('');
+                pageEle.imgList.css({'opacity': '1'});
+            }
+        });
+
+    //- sidebar menu
+    pageEle.menuBtn.on('click', function() {
+        pageEle.sidebar.addClass('show');
+        $body.find('[data-role="mask"]').remove();
+        $body.append(pageTpl.mask());
+    });
+
+    $body.on('click', '[data-role="mask"]', function() {
+        pageEle.sidebar.removeClass('show');
+        $body.find('[data-role="mask"]').remove();
     });
 
     // render page data
