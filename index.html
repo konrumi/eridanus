@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <title>Eridanus - NMC Radar Data</title>
     <link rel="stylesheet" href="./dist/styles/main.css">
+    <link rel="stylesheet" href="./res/css/font-awesome.min.css">
 </head>
 <body>
 
 <!-- progressBar -->
 <header class="progbar">
-    <div class="progbar-bar loading" style="left: 0;right: 0;"></div>
+      <div class="progbar-bar loading" style="left: 0;right: 0;"></div>
 </header>
 <!-- /progressBar -->
 
 <!-- sideBar -->
 <nav class="sidebar shandow" id="sidebar">
-    <h1><i>e</i><span>Eridanus</span></h1>
+    <h1><i class="icon"></i><span>Eridanus</span></h1>
     <ul>
-        <li><a href="#" class="active">雷达图</a></li>
+        <li><a href="#" class="active"><i class="fa" aria-hidden="true"></i> 雷达图</a></li>
         <li class="space"></li>
-        <li><a href="#">关于</a></li>
+        <li><a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"></i> 关于</a></li>
     </ul>
 </nav>
 <!-- /sideBar -->
@@ -34,8 +35,29 @@
 
     <!-- img block -->
     <div class="mainwrap-imgwrap">
-        <div class="mainwrap-title">
-            <a href="#" class="mainwrap-menu" id="menuBtn">〓</a>
+        <div class="mainwrap-title clearfix">
+            <div class="mainwrap-btns pull-left">
+                <a href="#" class="mainwrap-menu  fa fa-bars" id="menuBtn"></a>
+            </div>
+
+            <div class="mainwrap-time pull-right">
+                <span class="time-container">
+                    <i class="fa fa-caret-square-o-up" aria-hidden="true"></i>
+                    <span id="activeTime"></span>
+                </span>
+
+                <i class="time-arrow fa fa-angle-double-left"></i>
+                <span class="duration-container">
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    <span id="durationTime"></span>
+                </span>
+                <i class="time-arrow fa fa-angle-double-left"></i>
+
+                <span class="time-container">
+                    <i class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+                    <span id="referTime"></span>
+                </span>
+            </div>
         </div>
 
         <ul class="mainwrap-imglist" id="imgList"></ul>
@@ -47,13 +69,13 @@
     <ul class="mainwrap-layerlist" id="layerList"></ul>
 
     <script type="text/plain" id="imgItem">
-        <li class="mainwrap-imgitem" style="z-index: <%= index %>;" data-index="<%= index %>">
+        <li class="mainwrap-imgitem" style="z-index: <%= index %>;" data-index="<%= index %>"  data-time="<%= time %>">
             <img src="<%= img %>" alt="<%= time %>">
         </li>
     </script>
 
     <script type="text/plain" id="layerItem">
-        <li class="mainwrap-layeritem" data-index="<%= index %>">
+        <li class="mainwrap-layeritem" data-index="<%= index %>" data-time="<%= time %>">
             <span><%= time %></span>
         </li>
     </script>
@@ -67,7 +89,6 @@
 </body>
 
 <script>
-    // You can also require other files to run in this process
     require('./dist/index.js');
     require('./dist/radar.js');
 </script>

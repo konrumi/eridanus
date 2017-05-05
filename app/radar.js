@@ -1,6 +1,8 @@
 const $ = require('jquery');
 const ejs = require('ejs');
 
+const dateFormat = require('./modules/dateFormat');
+
 let $body = $('body');
 
 let pageTpl = {
@@ -15,11 +17,16 @@ let pageEle = {
     layerList: $('#layerList'),
     imgRefer: $('#imgRefer'),
     menuBtn: $('#menuBtn'),
+    activeTime: $('#activeTime'),
+    referTime: $('#referTime'),
+    durationTime: $('#durationTime'),
     sidebar: $('#sidebar')
 };
 
 let pageData = {
-    radarData: []
+    radarData: [],
+    activeTime: null,
+    referTime: null
 };
 
 function getPageData() {
@@ -44,9 +51,10 @@ function getPageData() {
                 let list = docFrag.find('#mycarousel').find('li');
                 $.each(list, (idx, ele) => {
                     let $ele = $(ele);
+                    let timeStr = $ele.find('.time').text();
                     result.push({
                         index: list.length - idx,
-                        time: $ele.find('.time').text(),
+                        time: new Date(timeStr.replace(/(.{4})(.{2})(.{2})/g, '$1-$2-$3')),
                         img: $ele.find('img').attr('data-original').replace(/small/g, 'medium')
                     });
                 });
@@ -58,29 +66,56 @@ function getPageData() {
     });
 }
 
+function renderTopTime(date, key) {
+    // set date
+    if (typeof pageData[key] !== 'undefined') {
+        pageData[key] = date;
+    }
+
+    // write time
+    let targetTimeNode = pageEle[key];
+    if (targetTimeNode) {
+        if (date === null) {
+            targetTimeNode.html('');
+        } else {
+            targetTimeNode.html(dateFormat(date, 'yyyy-MM-dd hh:mm'))
+        }
+    }
+
+    // write duration
+    if (pageData.activeTime !== null && pageData.referTime !== null) {
+        let durationTime = pageData.referTime - pageData.activeTime;
+        pageEle.durationTime.text(durationTime / 1000 / 60 + 'm');
+    }
+}
+
 function renderPage() {
     getPageData().then(() => {
         // render image list
-        pageEle.imgList.html(
-            (() => {
-                let result = '';
-                pageData.radarData.forEach((data) => {
-                    result += pageTpl.imgItem(data);
-                });
-                return result;
-            })()
-        );
+        pageEle.imgList.html('');
+        pageData.radarData.forEach((data) => {
+            let targetElement = $(pageTpl.imgItem({
+                index: data.index,
+                time: dateFormat(data.time, 'yyyy-MM-dd hh:mm'),
+                img: data.img
+            }));
+
+            targetElement.data({data: data});
+            pageEle.imgList.append(targetElement);
+        });
 
         // render layer list
-        pageEle.layerList.html(
-            (() => {
-                let result = '';
-                pageData.radarData.forEach((data) => {
-                    result += pageTpl.layerItem(data);
-                });
-                return result;
-            })()
-        );
+        pageEle.layerList.html('');
+        pageData.radarData.forEach((data) => {
+            let targetElement = $(pageTpl.layerItem({
+                index: data.index,
+                time: dateFormat(data.time, 'yyyy-MM-dd hh:mm'),
+                img: data.img
+            }));
+
+            targetElement.data({data: data});
+            pageEle.layerList.append(targetElement);
+        });
     });
 }
 
@@ -98,7 +133,10 @@ function initPage() {
 
             // active image
             pageEle.imgList.find('.active').removeClass('active');
-            pageEle.imgList.find('[data-index="' + $ele.attr('data-index') + '"]').addClass('active');
+            pageEle.imgList.find('[data-index="' + $ele.data('data').index + '"]').addClass('active');
+
+            // set active time
+            renderTopTime($ele.data('data').time, 'activeTime');
         })
         .on('click', '.mainwrap-layeritem', function() {
             let $ele = $(this);
@@ -109,19 +147,24 @@ function initPage() {
 
             // set refer image
             if (!hasMarked) {
-                let targetImgElement = pageEle.imgList.find('[data-index="' + $ele.attr('data-index') + '"]').find('img');
+                let targetImgElement = pageEle.imgList.find('[data-index="' + $ele.data('data').index + '"]');
 
                 $ele.addClass('marked');
 
                 pageEle.imgRefer.html(pageTpl.referImg({
-                    img: targetImgElement.attr('src'),
-                    time: targetImgElement.attr('alt')
+                    img: targetImgElement.data('data').img,
+                    time: dateFormat(targetImgElement.data('data').time, 'yyyy-MM-dd hh:mm')
                 }));
 
                 pageEle.imgList.css({'opacity': '.5'});
+
+                renderTopTime($ele.data('data').time, 'referTime');
             } else {
                 pageEle.imgRefer.html('');
+
                 pageEle.imgList.css({'opacity': '1'});
+
+                renderTopTime(null, 'referTime');
             }
         });
 
@@ -132,6 +175,7 @@ function initPage() {
         $body.append(pageTpl.mask());
     });
 
+    //- mask click
     $body.on('click', '[data-role="mask"]', function() {
         pageEle.sidebar.removeClass('show');
         $body.find('[data-role="mask"]').remove();
@@ -142,4 +186,3 @@ function initPage() {
 }
 
 initPage();
-
