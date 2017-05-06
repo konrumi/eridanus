@@ -3,7 +3,32 @@ const ejs = require('ejs');
 
 const dateFormat = require('./modules/dateFormat');
 
+const imgLoad = {
+    reset: function() {
+        pageData.loadedDataAmount = 0;
+        pageEle.loadBg.fadeIn(200);
+        pageEle.loadIcon.fadeIn(200);
+    },
+
+    done: function() {
+        pageData.loadedDataAmount++;
+
+        if (pageData.loadedDataAmount > 1) {
+            pageEle.loadBg.fadeOut(200);
+        }
+
+        if (pageData.loadedDataAmount === pageData.radarData.length) {
+            pageEle.loadIcon.fadeOut(200);
+        }
+    }
+};
+
 let $body = $('body');
+
+let pageParams = {
+    refreshTime: 5 * 60,
+    stationName: 'daxing'
+};
 
 let pageTpl = {
     imgItem: ejs.compile($('#imgItem').html(), null),
@@ -16,6 +41,8 @@ let pageEle = {
     imgList: $('#imgList'),
     layerList: $('#layerList'),
     imgRefer: $('#imgRefer'),
+    loadBg: $('#loadBg'),
+    loadIcon: $('#loadIcon'),
     menuBtn: $('#menuBtn'),
     activeTime: $('#activeTime'),
     referTime: $('#referTime'),
@@ -26,13 +53,14 @@ let pageEle = {
 let pageData = {
     radarData: [],
     activeTime: null,
-    referTime: null
+    referTime: null,
+    loadedDataAmount: 0
 };
 
 function getPageData() {
     return new Promise((resolve) => {
         $.ajax({
-            url: 'http://www.nmc.cn/publish/radar/daxing.html',
+            url: 'http://www.nmc.cn/publish/radar/' + pageParams.stationName +'.html',
             data: {
                 _t: (new Date()).getTime()
             }
@@ -84,13 +112,17 @@ function renderTopTime(date, key) {
 
     // write duration
     if (pageData.activeTime !== null && pageData.referTime !== null) {
-        let durationTime = pageData.referTime - pageData.activeTime;
-        pageEle.durationTime.text(durationTime / 1000 / 60 + 'm');
+        let durationTime = pageData.activeTime - pageData.referTime;
+        let direction = (durationTime >= 0) ? '+' : '-';
+        pageEle.durationTime.text(direction + Math.abs(durationTime) / 1000 / 60 + 'm');
     }
 }
 
 function renderPage() {
+    imgLoad.reset();
+
     getPageData().then(() => {
+
         // render image list
         pageEle.imgList.html('');
         pageData.radarData.forEach((data) => {
@@ -100,6 +132,10 @@ function renderPage() {
                 img: data.img
             }));
 
+            targetElement.find('img')
+                .on('load', function() {
+                    imgLoad.done();
+                });
             targetElement.data({data: data});
             pageEle.imgList.append(targetElement);
         });
@@ -116,6 +152,13 @@ function renderPage() {
             targetElement.data({data: data});
             pageEle.layerList.append(targetElement);
         });
+
+        renderTopTime(pageData.radarData[0].time, 'activeTime');
+
+        // set time
+        setTimeout(() => {
+            renderPage();
+        }, pageParams.refreshTime * 1000);
     });
 }
 

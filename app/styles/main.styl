@@ -32,10 +32,10 @@ borderbox()
 
 .pull-left
   float left
-  
+
 .pull-right
   float right
-  
+
 .clearfix
   &:after
     content ''
@@ -181,15 +181,15 @@ i, em
     top -1px
 
   .mainwrap-title
-    height 60px
-    line-height 60px
+    height 118px
+    line-height 118px
 
     .mainwrap-menu
       float left
       display block
       width 24px
       height 24px
-      margin 18px 10px
+      margin 46px 10px
       border 1px solid #aaa
       border-radius 50%
       background-color #fff
@@ -217,14 +217,15 @@ i, em
       border 1px solid #ccc
       border-radius 5px
       color #666
+      font-mono()
       line-height 30px
       vertical-align middle
 
     .time-container
-      width 145px
+      width 180px
 
     .duration-container
-      width 60px
+      width 65px
 
     .time-arrow
       display inline-block
@@ -246,7 +247,7 @@ i, em
     overflow hidden
     z-index 2
 
-  .mainwrap-imgRefer
+  .mainwrap-imgrefer
     position absolute
     left 0
     bottom 0
@@ -254,6 +255,36 @@ i, em
     height 640px
     overflow hidden
     z-index 1
+
+  .mainwrap-imgload
+    position: absolute
+    left: 0
+    bottom: 0
+    width 855px
+    height 640px
+    z-index 3
+
+    .loadbg
+      position: absolute
+      left: 0
+      right: 0
+      top: 0
+      bottom: 0
+      background-color: #fff
+
+    .loadicon
+      position: absolute
+      left: 50%
+      top: 50%
+      width: 60px
+      height: 60px
+      margin: -30px 0 0 -30px
+      background-color: rgba(0, 0, 0, .4)
+      border-radius 5px
+      color #fff
+      font-size 32px
+      line-height: 58px
+      text-align: center
 
   .mainwrap-imgitem
     position absolute
