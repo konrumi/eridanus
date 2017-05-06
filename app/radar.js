@@ -2,6 +2,7 @@ const $ = require('jquery');
 const ejs = require('ejs');
 
 const dateFormat = require('./modules/dateFormat');
+const ProgressBar = require('./modules/progressBar');
 
 const imgLoad = {
     reset: function() {
@@ -13,21 +14,53 @@ const imgLoad = {
     done: function() {
         pageData.loadedDataAmount++;
 
+        pageProgressBar.setProgress(pageData.loadedDataAmount / pageData.radarData.length);
+
         if (pageData.loadedDataAmount > 1) {
             pageEle.loadBg.fadeOut(200);
         }
 
         if (pageData.loadedDataAmount === pageData.radarData.length) {
             pageEle.loadIcon.fadeOut(200);
+
+            // start page clock
+            pageProgressBar.setType('count');
+            pageProgressBar.setProgress(0);
+            console.log('start');
+            pageClock.start();
         }
+    }
+};
+
+const pageClock = {
+    clockId: 0,
+
+    start: function() {
+        pageClock.stop();
+        this.clockId = setTimeout(() => {
+            pageParams.currentTime++;
+            pageProgressBar.setProgress(pageParams.currentTime / pageParams.refreshTime);
+
+            if (pageParams.currentTime >= pageParams.refreshTime) {
+                pageParams.currentTime = 0;
+                renderPage();
+            }
+            pageClock.start();
+        }, 1000);
+    },
+
+    stop: function() {
+        clearTimeout(this.clockId);
     }
 };
 
 let $body = $('body');
 
 let pageParams = {
-    refreshTime: 5 * 60,
-    stationName: 'daxing'
+    currentTime: 0,
+    refreshTime: 60,
+    stationName: 'daxing',
+    clockId: 0
 };
 
 let pageTpl = {
@@ -38,6 +71,7 @@ let pageTpl = {
 };
 
 let pageEle = {
+    progressBar: $('#progressBar'),
     imgList: $('#imgList'),
     layerList: $('#layerList'),
     imgRefer: $('#imgRefer'),
@@ -56,6 +90,11 @@ let pageData = {
     referTime: null,
     loadedDataAmount: 0
 };
+
+let pageProgressBar = new ProgressBar({
+    ele: pageEle.progressBar,
+    type: 'load'
+});
 
 function getPageData() {
     return new Promise((resolve) => {
@@ -120,9 +159,11 @@ function renderTopTime(date, key) {
 
 function renderPage() {
     imgLoad.reset();
+    pageClock.stop();
+    pageProgressBar.setType('load');
+    pageProgressBar.setProgress(0);
 
     getPageData().then(() => {
-
         // render image list
         pageEle.imgList.html('');
         pageData.radarData.forEach((data) => {
@@ -153,12 +194,8 @@ function renderPage() {
             pageEle.layerList.append(targetElement);
         });
 
+        // render top time
         renderTopTime(pageData.radarData[0].time, 'activeTime');
-
-        // set time
-        setTimeout(() => {
-            renderPage();
-        }, pageParams.refreshTime * 1000);
     });
 }
 

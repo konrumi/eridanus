@@ -81,15 +81,15 @@ i, em
   right 0
   top 0
   height 5px
-  background-color #fff
-  border-bottom 1px solid #ccc
-  borderbox
+  border-bottom 1px solid #999
+  borderbox()
+  transition background-color .5s
+
   .progbar-bar
     position absolute
     top 0
     bottom 0
-    background-color #ddd
-    transition all .2s
+    background-color #ccc
 
 /* sidebar */
 .sidebar
@@ -165,7 +165,7 @@ i, em
 /* img block */
 .mainwrap
   position absolute
-  top 6px
+  top 5px
   left 0
   right 0
   bottom 0
@@ -190,10 +190,10 @@ i, em
       width 24px
       height 24px
       margin 46px 10px
-      border 1px solid #aaa
+      border 1px solid #999
       border-radius 50%
       background-color #fff
-      color #aaa
+      color #999
       font-size 14px
       font-weight 700
       line-height 24px
@@ -202,7 +202,7 @@ i, em
       vertical-align middle
 
       &:hover
-        background-color #aaa
+        background-color #999
         color #fff
 
   .mainwrap-time
@@ -214,7 +214,7 @@ i, em
       height 30px
       padding 2px 10px
       background-color #eee
-      border 1px solid #ccc
+      border 1px solid #999
       border-radius 5px
       color #666
       font-mono()
@@ -243,7 +243,7 @@ i, em
     bottom 0
     width 855px
     height 640px
-    border-top 1px solid #ccc
+    border-top 1px solid #999
     overflow hidden
     z-index 2
 
@@ -257,34 +257,34 @@ i, em
     z-index 1
 
   .mainwrap-imgload
-    position: absolute
-    left: 0
-    bottom: 0
+    position absolute
+    left 0
+    bottom 0
     width 855px
     height 640px
     z-index 3
 
     .loadbg
-      position: absolute
-      left: 0
-      right: 0
-      top: 0
-      bottom: 0
-      background-color: #fff
+      position absolute
+      left 0
+      right 0
+      top 0
+      bottom 0
+      background-color #fff
 
     .loadicon
-      position: absolute
-      left: 50%
-      top: 50%
-      width: 60px
-      height: 60px
-      margin: -30px 0 0 -30px
-      background-color: rgba(0, 0, 0, .4)
+      position absolute
+      left 50%
+      top 50%
+      width 60px
+      height 60px
+      margin -30px 0 0 -30px
+      background-color rgba(0, 0, 0, .4)
       border-radius 5px
       color #fff
       font-size 32px
-      line-height: 58px
-      text-align: center
+      line-height 58px
+      text-align center
 
   .mainwrap-imgitem
     position absolute
@@ -300,13 +300,13 @@ i, em
   .mainwrap-layerlist
     flex 1 0 auto
     height 100%
-    border-left 1px solid #ccc
+    border-left 1px solid #999
     background-color #eee
     overflow auto
     user-select none
 
     .mainwrap-layeritem
-      border-bottom 1px solid #aaa
+      border-bottom 1px solid #999
       font-size 14px
       font-mono()
       cursor pointer
