@@ -26,7 +26,6 @@ const imgLoad = {
             // start page clock
             pageProgressBar.setType('count');
             pageProgressBar.setProgress(0);
-            console.log('start');
             pageClock.start();
         }
     }
@@ -42,7 +41,6 @@ const pageClock = {
             pageProgressBar.setProgress(pageParams.currentTime / pageParams.refreshTime);
 
             if (pageParams.currentTime >= pageParams.refreshTime) {
-                pageParams.currentTime = 0;
                 renderPage();
             }
             pageClock.start();
@@ -60,7 +58,8 @@ let pageParams = {
     currentTime: 0,
     refreshTime: 60,
     stationName: 'daxing',
-    clockId: 0
+    clockId: 0,
+    mode: 'move' // Mode: 'move' or 'draw'
 };
 
 let pageTpl = {
@@ -75,12 +74,12 @@ let pageEle = {
     imgList: $('#imgList'),
     layerList: $('#layerList'),
     imgRefer: $('#imgRefer'),
+    imgCanvas: $('#imgCanvas'),
     loadBg: $('#loadBg'),
     loadIcon: $('#loadIcon'),
     menuBtn: $('#menuBtn'),
     refreshBtn: $('#refreshBtn'),
-    moveBtn: $('#moveBtn'),
-    drawBtn: $('#drawBtn'),
+    modeBtn: $('[data-func="mode-btn"]'),
     clearBtn: $('#clearBtn'),
     activeTime: $('#activeTime'),
     referTime: $('#referTime'),
@@ -92,7 +91,8 @@ let pageData = {
     radarData: [],
     activeTime: null,
     referTime: null,
-    loadedDataAmount: 0
+    loadedDataAmount: 0,
+    pointList: []
 };
 
 let pageProgressBar = new ProgressBar({
@@ -103,7 +103,7 @@ let pageProgressBar = new ProgressBar({
 function getPageData() {
     return new Promise((resolve) => {
         $.ajax({
-            url: 'http://www.nmc.cn/publish/radar/' + pageParams.stationName +'.html',
+            url: 'http://www.nmc.cn/publish/radar/' + pageParams.stationName + '.html',
             data: {
                 _t: (new Date()).getTime()
             }
@@ -147,9 +147,9 @@ function renderTopTime(date, key) {
     let targetTimeNode = pageEle[key];
     if (targetTimeNode) {
         if (date === null) {
-            targetTimeNode.html('');
+            targetTimeNode.text('');
         } else {
-            targetTimeNode.html(dateFormat(date, 'yyyy-MM-dd hh:mm'))
+            targetTimeNode.text(dateFormat(date, 'yyyy-MM-dd hh:mm'))
         }
     }
 
@@ -158,10 +158,18 @@ function renderTopTime(date, key) {
         let durationTime = pageData.activeTime - pageData.referTime;
         let direction = (durationTime >= 0) ? '+' : '-';
         pageEle.durationTime.text(direction + Math.abs(durationTime) / 1000 / 60 + 'm');
+    } else {
+        pageEle.durationTime.text('');
     }
 }
 
 function renderPage() {
+    // reset top time
+    renderTopTime(null, 'activeTime');
+    renderTopTime(null, 'referTime');
+
+    // reset progress bar
+    pageParams.currentTime = 0;
     imgLoad.reset();
     pageClock.stop();
     pageProgressBar.setType('load');
@@ -263,6 +271,48 @@ function initPage() {
     $body.on('click', '[data-role="mask"]', function() {
         pageEle.sidebar.removeClass('show');
         $body.find('[data-role="mask"]').remove();
+    });
+
+    //- refresh btn
+    pageEle.refreshBtn.on('click', function() {
+        renderPage();
+    });
+
+    //- mode btn
+    pageEle.modeBtn.on('click', function() {
+        let $this = $(this);
+        if (pageParams.mode !== $this.attr('data-mode')) {
+            pageEle.imgCanvas.removeClass(pageParams.mode);
+            pageParams.mode = $this.attr('data-mode');
+            pageEle.imgCanvas.addClass(pageParams.mode);
+
+            $('[data-func="mode-btn"].active').removeClass('active');
+            $this.addClass('active');
+        }
+    });
+
+    //- img canvas
+    pageEle.imgCanvas.on('click', function(e) {
+        e.preventDefault();
+
+        switch (pageParams.mode) {
+            case 'move' :
+                break;
+
+            case 'draw' :
+                // draw point
+                console.log(e.offsetX, e.offsetY);
+                break;
+        }
+    });
+
+    pageEle.imgCanvas.on('dblclick', function(e) {
+        switch (pageParams.mode) {
+            case 'draw' :
+                // draw point
+                console.log('miao');
+                break;
+        }
     });
 
     // render page data

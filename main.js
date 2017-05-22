@@ -19,7 +19,7 @@ function createWindow() {
         useContentSize: true,
 
         fullscreen: false,
-        resizable: false,
+        resizable: true,
         autoHideMenuBar: true,
 
         title: 'Eridanus',

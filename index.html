@@ -41,8 +41,8 @@
                 <span class="mainwrap-menuborder"></span>
                 <a href="#" class="mainwrap-menu fa fa-refresh" id="refreshBtn"></a>
                 <span class="mainwrap-menuborder"></span>
-                <a href="#" class="mainwrap-menu fa fa-arrows" id="moveBtn"></a>
-                <a href="#" class="mainwrap-menu fa fa-pencil" id="drawBtn"></a>
+                <a href="#" class="mainwrap-menu fa fa-arrows active" data-func="mode-btn" data-mode="move"></a>
+                <a href="#" class="mainwrap-menu fa fa-pencil" data-func="mode-btn" data-mode="draw"></a>
                 <a href="#" class="mainwrap-menu fa fa-trash-o" id="clearBtn"></a>
             </div>
 
@@ -70,7 +70,7 @@
 
         <div class="mainwrap-imgrefer" id="imgRefer"></div>
 
-        <div class="mainwrap-imgcanvas"></div>
+        <canvas class="mainwrap-imgcanvas move" id="imgCanvas"></canvas>
 
         <div class="mainwrap-imgload">
             <div class="loadbg" id="loadBg"></div>

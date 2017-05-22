@@ -204,6 +204,7 @@ i, em
       text-decoration none
       vertical-align middle
 
+      &.active,
       &:hover
         background-color #999
         color #fff
@@ -271,10 +272,16 @@ i, em
     position absolute
     left 0
     bottom 0
-    width 855px
+    width 644px
     height 640px
     overflow hidden
     z-index 3
+    user-select none
+
+    &.move
+      cursor move
+    &.draw
+      cursor crosshair
 
   .mainwrap-imgload
     position absolute
@@ -282,7 +289,7 @@ i, em
     bottom 0
     width 855px
     height 640px
-    z-index 3
+    z-index 2
 
     .loadbg
       position absolute
